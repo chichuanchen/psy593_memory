@@ -29,10 +29,17 @@ library(styler)
 
 # Open data seperately
 ```{r}
+# set root path where the project file is
+root_path <- here::here()  
+### Path variables ----
+data_path <- file.path(root_path, "data")
 
-dfM <- read.csv("L:/2_Research/2_Analysis_Folder/MemVio//part3_RTout.csv")
 
-dfW <- read.csv("L:/2_Research/2_Analysis_Folder/Wubbles//part3_RTout.csv")
+dfM <- read.csv(file = file.path(data_path, "raw_data", "exp_1.csv"))
+# original name: L:/2_Research/2_Analysis_Folder/MemVio//part3_RTout.csv"
+
+dfW <- read.csv(file = file.path(data_path, "raw_data", "exp_2.csv"))
+# original name: L:/2_Research/2_Analysis_Folder/Wubbles//part3_RTout.csv
 
 ```
 
