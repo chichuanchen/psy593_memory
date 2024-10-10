@@ -52,7 +52,8 @@ exp1_data <- exp1_data %>%
                 levels = c("lowPE", "medPE", "highPE"),
                 labels = c("low", "med", "high")),
     participant = factor(participant),
-    conf = factor(conf, levels = c("1", "2", "3", "4"))
+    conf = factor(conf, levels = c("1", "2", "3", "4")),
+    experiment = "1"
   ) %>%
   drop_na()
 
