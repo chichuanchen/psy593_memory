@@ -108,6 +108,14 @@ full_data <- bind_rows(exp1_data, exp2_data)
 
 ```
 
+# New variable for plots
+```{r}
+
+plot_data <- full_data %>%
+  select(participant, pe, corrAns, experiment)
+
+```
+
 # Aggregated data
 ```{r}
 
