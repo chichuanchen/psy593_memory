@@ -25,6 +25,7 @@ library(PupillometryR)
 library(MetBrewer)
 library(here)
 library(styler)
+library(readr)
 ```
 
 # Open data seperately
@@ -35,52 +36,61 @@ root_path <- here::here()
 data_path <- file.path(root_path, "data")
 
 
-exp1_data <- read.csv(file = file.path(data_path, "raw_data", "exp_1.csv"))
+exp1_data <- read_csv(file = file.path(data_path, "raw_data", "exp_1.csv"))
 # original name: L:/2_Research/2_Analysis_Folder/MemVio//part3_RTout.csv"
 
-exp2_data <- read.csv(file = file.path(data_path, "raw_data", "exp_2.csv"))
+exp2_data <- read_csv(file = file.path(data_path, "raw_data", "exp_2.csv"))
 # original name: L:/2_Research/2_Analysis_Folder/Wubbles//part3_RTout.csv
 
 ```
 
-Preparations for dfM
+Preparations for exp1_data
 ```{r}
+exp1_data <- exp1_data %>%
+  mutate(
+    pe = factor(pe, 
+                levels = c("lowPE", "medPE", "highPE"),
+                labels = c("low", "med", "high")),
+    participant = factor(participant),
+    conf = factor(conf, levels = c("1", "2", "3", "4"))
+  ) %>%
+  drop_na()
 
-dfM$pe <- factor(dfM$pe, levels = c("lowPE", "medPE", "highPE")) # pe
-
-dfM$participant <- as.factor(dfM$participant) # participants
-
-dfM$conf <- factor(dfM$conf, levels = c("1", "2", "3", "4")) # confidence
-
-dfM <- na.omit(dfM)
-
-dfM$study <- c("Experiment 1")
+# exp1_data$pe <- factor(exp1_data$pe, levels = c("lowPE", "medPE", "highPE")) # pe
+# 
+# exp1_data$participant <- as.factor(exp1_data$participant) # participants
+# 
+# exp1_data$conf <- factor(exp1_data$conf, levels = c("1", "2", "3", "4")) # confidence
+# 
+# exp1_data <- na.omit(exp1_data)
+# 
+# exp1_data$study <- c("Experiment 1")
 
 ```
 
-# preparations for dfW
+# preparations for exp2_data
 ```{r}
 
 # change the naming for PE levels to be consistend
-dfW <- dfW %>%
+exp2_data <- exp2_data %>%
   mutate(PE_level = recode(PE_level, low = "lowPE", medium = "medPE", high = "highPE"))
 
-dfW$pe <- factor(dfW$PE_level, levels = c("lowPE", "medPE", "highPE")) # pe
+exp2_data$pe <- factor(exp2_data$PE_level, levels = c("lowPE", "medPE", "highPE")) # pe
 
-dfW$participant <- as.factor(dfW$participant) # participants
+exp2_data$participant <- as.factor(exp2_data$participant) # participants
 
-dfW$conf <- factor(dfW$conf, levels = c("1", "2", "3", "4")) # confidence
+exp2_data$conf <- factor(exp2_data$conf, levels = c("1", "2", "3", "4")) # confidence
 
-dfW <- na.omit(dfW)
+exp2_data <- na.omit(exp2_data)
 
-dfW$study <- c("Experiment 2")
+exp2_data$study <- c("Experiment 2")
 
 ```
 
 # Combine two data sets
 ```{r}
 
-df <- bind_rows(dfM, dfW)
+df <- bind_rows(exp1_data, exp2_data)
 # just ignore the na values
 
 df$study <- as.factor(df$study)
