@@ -36,21 +36,21 @@ root_path <- here::here()
 data_path <- file.path(root_path, "data")
 
 
-exp1_data <- read_csv(file = file.path(data_path, "raw_data", "exp_1.csv"))
+exp1_data_raw <- read_csv(file = file.path(data_path, "raw_data", "exp_1.csv"))
 # original name: L:/2_Research/2_Analysis_Folder/MemVio//part3_RTout.csv"
 
-exp2_data <- read_csv(file = file.path(data_path, "raw_data", "exp_2.csv"))
+exp2_data_raw <- read_csv(file = file.path(data_path, "raw_data", "exp_2.csv"))
 # original name: L:/2_Research/2_Analysis_Folder/Wubbles//part3_RTout.csv
 
 ```
 
 Preparations for exp1_data
 ```{r}
-exp1_data <- exp1_data %>%
+exp1_data <- exp1_data_raw %>%
   mutate(
     pe = factor(pe, 
-                levels = c("lowPE", "medPE", "highPE"),
-                labels = c("low", "med", "high")),
+                levels = c("lowPE", "medPE", "highPE", "new"),
+                labels = c("low", "med", "high", "new")),
     participant = factor(participant),
     conf = factor(conf, levels = c("1", "2", "3", "4")),
     experiment = "1"
@@ -73,18 +73,28 @@ exp1_data <- exp1_data %>%
 ```{r}
 
 # change the naming for PE levels to be consistend
-exp2_data <- exp2_data %>%
-  mutate(PE_level = recode(PE_level, low = "lowPE", medium = "medPE", high = "highPE"))
+exp2_data <- exp2_data_raw %>%
+  rename(pe = PE_level) %>%
+  mutate(
+    pe = factor(pe,
+                levels = c("low", "medium", "high", "new"),
+                labels = c("low", "med", "high", "new")),
+    participant = factor(participant),
+    conf = factor(conf, levels = c("1", "2", "3", "4")),
+    experiment = "2"
+  ) %>%
+  drop_na()
+  
 
-exp2_data$pe <- factor(exp2_data$PE_level, levels = c("lowPE", "medPE", "highPE")) # pe
-
-exp2_data$participant <- as.factor(exp2_data$participant) # participants
-
-exp2_data$conf <- factor(exp2_data$conf, levels = c("1", "2", "3", "4")) # confidence
-
-exp2_data <- na.omit(exp2_data)
-
-exp2_data$study <- c("Experiment 2")
+# exp2_data$pe <- factor(exp2_data$PE_level, levels = c("lowPE", "medPE", "highPE")) # pe
+# 
+# exp2_data$participant <- as.factor(exp2_data$participant) # participants
+# 
+# exp2_data$conf <- factor(exp2_data$conf, levels = c("1", "2", "3", "4")) # confidence
+# 
+# exp2_data <- na.omit(exp2_data)
+# 
+# exp2_data$study <- c("Experiment 2")
 
 ```
 
